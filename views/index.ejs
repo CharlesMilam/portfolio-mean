@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>charles milam - portofolio - the MEAN version</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.10/angular.min.js"></script>
+    <script type="text/javascript" src="/javascripts/portfolioApp.js"></script>
+</head>
+<body ng-app="portfolio" ng-controller="MainCtrl">
+    <div ng-repeat="project in projects | orderBy: 'sortNum'">
+        {{project.name}} - {{project.about}}<br>
+        {{project.devDate | date}}<br>
+        {{project.status}}<br>
+        {{project.repo}}
+    </div>
+    <div>
+      <form ng-submit="addProject()">
+        <label>Project Name</label>
+        <input type="text" ng-model="name"><br>
+        <label>About</label>
+        <input type="text" ng-model="about"><br>
+        <label>Dev Date</label>
+        <input type="date" ng-model="devDate"><br>
+        <label>Status</label>
+        <input type="status" ng-model="status"><br>
+        <label>Repo</label>
+        <input type="url" ng-model="repo"><br>
+        <label>Image</label>
+        <input type="text" ng-model="image"><br>
+        <label>Sort Number</label>
+        <input  type="number" ng-model="sortNum"><br>
+        <button >Add Project</button>
+      </form>
+    </div>
+
+</body>
+</html>

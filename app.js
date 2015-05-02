@@ -1,54 +1,60 @@
-var app = angular.module("portfolio", [])
+var express = require('express');
+var path = require('path');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 
-app.controller("MainCtrl", [
-    "$scope",
-    function  ($scope) {
-        $scope.projects = [
-           {
-                name: "Tatalog",
-                about: "organize your ink",
-                devDate: "March 2015",
-                repo: "https://github.com/CharlesMilam/tatalog",
-                status: "active development",
-                image: "/app/assets/images/tatalog.png",
-                sortNum: 0
-            },
-            {
-                name: "Portfolio",
-                about: "this portfolio",
-                devDate: "March 2015",
-                repo: "https://github.com/CharlesMilam/portfolio",
-                status: "active development",
-                image: "/app/assets/images/portfolio.png",
-                sortNum: 1
-            }
-        ]
+var routes = require('./routes/index');
+var users = require('./routes/users');
 
-        $scope.addProject = function  () {
-            // basic form validation
-            if (!$scope.name || $scope.name === "") {return}
+var app = express();
 
-            $scope.projects.push(
-                {
-                    name: $scope.name,
-                    about: $scope.about,
-                    devDate: $scope.devDate,
-                    repo: $scope.repo,
-                    status: $scope.status,
-                    image: $scope.image,
-                    sortNum: $scope.sortNum
-                }
-            )
-            // clear the form
-            {
-                    $scope.name = "",
-                    $scope.about = "",
-                    $scope.devDate = "",
-                    $scope.repo = "",
-                    $scope.status = "",
-                    $scope.image = "",
-                    $scope.sortNum = ""
-            }
-        }
-    }
-])
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+// uncomment after placing your favicon in /public
+//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/', routes);
+app.use('/users', users);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+
+// error handlers
+
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: err
+    });
+  });
+}
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
+});
+
+
+module.exports = app;
